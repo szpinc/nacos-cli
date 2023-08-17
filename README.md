@@ -2,7 +2,8 @@
 
 `nacos-cli`是一个命令行工具，用来代替nacos的图形界面操作。
 
-![image](https://github.com/szpinc/nacos-cli/assets/19821378/159d0d68-5794-4f65-aef4-194c69d23cb1)
+![carbon](https://github.com/szpinc/nacos-cli/assets/19821378/2899922a-e7c7-402d-80d4-a6bb27912efc)
+
 
 
 ## 安装
