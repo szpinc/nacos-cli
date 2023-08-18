@@ -15,16 +15,24 @@
 
 **获取所有配置列表**
 
-`nacos-cli get config -A`
+``` bash
+nacos-cli get config -A
+```
 
 **获取指定配置**
 
-`nacos-cli get config common.yaml -n PUBLIC -g DEFAULT_GROUP`
+``` bash
+nacos-cli get config common.yaml -n PUBLIC -g DEFAULT_GROUP
+```
 
 **编辑配置**
 
-`nacos-cli edit config common.yaml -n PUBLIC -g DEFAULT_GROUP`
+``` bash
+nacos-cli edit config common.yaml -n PUBLIC -g DEFAULT_GROUP
+```
 
 **编辑配置-指定文件**
 
-`nacos-cli edit config common.yaml -f ./edit_common.yaml -n PUBLIC -g DEFAULT_GROUP`
+``` bash
+nacos-cli edit config common.yaml -f ./edit_common.yaml -n PUBLIC -g DEFAULT_GROUP
+```
