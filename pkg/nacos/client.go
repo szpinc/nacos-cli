@@ -49,7 +49,7 @@ func (c *Client) Get(operation ConfigGetOperation) (string, error) {
 }
 
 // AllConfig 获取所有配置
-func (c *Client) AllConfig(operation ConfigGetOperation) ([]string, error) {
+func (c *Client) AllConfig(operation ConfigGetOperation) ([]NacosPageItem, error) {
 
 	configUrl, err := getUrl(c.Config)
 
@@ -81,13 +81,7 @@ func (c *Client) AllConfig(operation ConfigGetOperation) ([]string, error) {
 		return nil, err
 	}
 
-	dataIds := []string{}
-
-	for _, item := range result.PageItems {
-		dataIds = append(dataIds, item.DataId)
-	}
-
-	return dataIds, nil
+	return result.PageItems, nil
 }
 
 // Edit 更新配置

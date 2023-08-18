@@ -12,6 +12,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/gosuri/uitable"
 	"github.com/spf13/cobra"
 )
 
@@ -45,9 +46,9 @@ var getConfig = &cobra.Command{
 				fmt.Println(err.Error())
 				return
 			}
-			for _, name := range dataIds {
-				fmt.Println(name)
-			}
+
+			printTable(dataIds)
+
 			return
 		}
 
@@ -135,4 +136,17 @@ func init() {
 	getCmd.AddCommand(getConfig)
 
 	getConfig.Flags().BoolVarP(&getAllConfig, "all", "A", false, "If present, list the requested object(s) across all config name")
+}
+
+func printTable(items []nacos.NacosPageItem) {
+	table := uitable.New()
+	table.MaxColWidth = 50
+
+	table.AddRow("ID", "GROUP", "NAMESPACE")
+
+	for _, item := range items {
+		table.AddRow(item.DataId, item.Group, namespace)
+	}
+
+	fmt.Println(table)
 }
