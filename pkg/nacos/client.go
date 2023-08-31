@@ -51,8 +51,6 @@ func (c *Client) Get(operation ConfigGetOperation) (string, error) {
 // AllConfig 获取所有配置
 func (c *Client) AllConfig(operation ConfigGetOperation) ([]NacosPageItem, error) {
 
-	println("Namespace: ", operation.Namespace)
-
 	configUrl, err := getUrl(c.Config)
 
 	if err != nil {
