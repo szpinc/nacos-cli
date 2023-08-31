@@ -11,13 +11,17 @@
 
 **AMD64**
 
-`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/latest/nacos-cli_linux_amd64`
+`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/v1.1/nacos-cli_linux_amd64`
 
 **ARM64**
 
-`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/latest/nacos-cli_linux_arm64`
+`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/v1.1/nacos-cli_linux_arm64`
 
 ## 使用
+
+**环境变量**
+
+export NACOS_ADDR="http://127.0.0.1:8848/nacos"
 
 **获取所有配置列表**
 
