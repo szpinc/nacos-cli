@@ -11,11 +11,11 @@
 
 **AMD64**
 
-`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/v1.0/nacos-cli_v1.0_linux_amd64`
+`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/v1.1/nacos-cli_v1.1_linux_amd64`
 
 **ARM64**
 
-`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/v1.0/nacos-cli_v1.0_linux_arm64`
+`curl -o /usr/local/bin/nacos-cli https://github.com/szpinc/nacos-cli/releases/download/v1.1/nacos-cli_v1.1_linux_arm64`
 
 ## 使用
 
