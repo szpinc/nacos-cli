@@ -27,7 +27,7 @@ func (c *Client) Get(operation ConfigGetOperation) (string, error) {
 		return "", err
 	}
 
-	requestUrl := fmt.Sprintf(configUrl+"?dataId=%s&group=%s", operation.DataId, operation.Group)
+	requestUrl := fmt.Sprintf(configUrl+"?dataId=%s&group=%s&tenant=%s", operation.DataId, operation.Group, operation.Namespace)
 
 	resp, err := http.Get(requestUrl)
 
@@ -51,13 +51,15 @@ func (c *Client) Get(operation ConfigGetOperation) (string, error) {
 // AllConfig 获取所有配置
 func (c *Client) AllConfig(operation ConfigGetOperation) ([]NacosPageItem, error) {
 
+	println("Namespace: ", operation.Namespace)
+
 	configUrl, err := getUrl(c.Config)
 
 	if err != nil {
 		return nil, err
 	}
 
-	requestUrl := fmt.Sprintf(configUrl+"?dataId=&group=%s&pageNo=1&pageSize=999&search=accurate", operation.Group)
+	requestUrl := fmt.Sprintf(configUrl+"?dataId=&group=%s&tenant=%s&pageNo=1&pageSize=999&search=accurate", operation.Group, operation.Namespace)
 
 	resp, err := http.Get(requestUrl)
 
@@ -97,6 +99,7 @@ func (c *Client) Edit(operation ConfigEditOperation) error {
 		"dataId":  []string{operation.DataId},
 		"group":   []string{operation.Group},
 		"content": []string{operation.Content},
+		"tenant":  []string{operation.Namespace},
 	})
 
 	if err != nil {
