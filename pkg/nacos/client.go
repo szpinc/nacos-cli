@@ -2,6 +2,7 @@ package nacos
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -19,33 +20,43 @@ type Client struct {
 }
 
 // Get获取配置
-func (c *Client) Get(operation ConfigGetOperation) (string, error) {
+func (c *Client) Get(operation ConfigGetOperation) (*NacosConfigDetail, error) {
 
 	configUrl, err := getUrl(c.Config)
 
 	if err != nil {
-		return "", err
+		return nil, err
 	}
 
-	requestUrl := fmt.Sprintf(configUrl+"?dataId=%s&group=%s&tenant=%s", operation.DataId, operation.Group, operation.Namespace)
+	requestUrl := fmt.Sprintf(configUrl+"?show=all&dataId=%s&group=%s&tenant=%s", operation.DataId, operation.Group, operation.Namespace)
 
 	resp, err := http.Get(requestUrl)
 
 	if err != nil {
-		return "", err
+		return nil, err
+	}
+
+	if resp.Header.Get("Content-Length") == "0" {
+		return nil, errors.New("config not exists")
 	}
 
 	body, err := io.ReadAll(resp.Body)
 
 	if err != nil {
-		body = []byte{}
+		return nil, err
 	}
 
 	if resp.StatusCode != http.StatusOK {
-		return "", fmt.Errorf("response error,status code:%d\n%s", resp.StatusCode, body)
+		return nil, fmt.Errorf("response error,status code:%d\n%s", resp.StatusCode, body)
 	}
 
-	return string(body), nil
+	detail := NacosConfigDetail{}
+
+	if err = json.Unmarshal(body, &detail); err != nil {
+		return nil, err
+	}
+
+	return &detail, nil
 }
 
 // AllConfig 获取所有配置
@@ -59,6 +70,7 @@ func (c *Client) AllConfig(operation ConfigGetOperation) ([]NacosPageItem, error
 
 	requestUrl := fmt.Sprintf(configUrl+"?dataId=&group=%s&tenant=%s&pageNo=1&pageSize=999&search=accurate", operation.Group, operation.Namespace)
 
+	fmt.Printf("requestUrl: %v\n", requestUrl)
 	resp, err := http.Get(requestUrl)
 
 	if err != nil {
@@ -93,11 +105,14 @@ func (c *Client) Edit(operation ConfigEditOperation) error {
 		return err
 	}
 
+	fmt.Println("type: ", operation.Type)
+
 	resp, err := http.PostForm(configUrl, url.Values{
 		"dataId":  []string{operation.DataId},
 		"group":   []string{operation.Group},
 		"content": []string{operation.Content},
 		"tenant":  []string{operation.Namespace},
+		"type":    []string{operation.Type},
 	})
 
 	if err != nil {

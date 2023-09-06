@@ -16,7 +16,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var getAllConfig bool
+var (
+	getAllConfig bool   // 获取所有配置
+	fileType     string // 配置类型
+)
 
 var getConfig = &cobra.Command{
 	Use:   "config",
@@ -59,7 +62,7 @@ var getConfig = &cobra.Command{
 			return
 		}
 
-		fmt.Println(configData)
+		fmt.Println(configData.Content)
 	},
 }
 
@@ -86,14 +89,12 @@ var editConfig = &cobra.Command{
 			return
 		}
 
-		md5 := util.Md5ToString(configData)
-
 		e := editor.NewDefaultEditor([]string{})
 
 		buf := &bytes.Buffer{}
-		buf.Write([]byte(configData))
+		buf.Write([]byte(configData.Content))
 
-		edited, file, err := e.LaunchTempFile(fmt.Sprintf("%s-edit-", filepath.Base(os.Args[0])), "yaml", buf)
+		edited, file, err := e.LaunchTempFile(fmt.Sprintf("%s-edit-", filepath.Base(os.Args[0])), configData.Type, buf)
 
 		if err != nil {
 			fmt.Println(err.Error())
@@ -102,7 +103,7 @@ var editConfig = &cobra.Command{
 
 		editedMd5 := util.Md5BytesToString(edited)
 
-		if md5 == editedMd5 {
+		if configData.Md5 == editedMd5 {
 			fmt.Println("Not Changed")
 			return
 		}
@@ -113,6 +114,10 @@ var editConfig = &cobra.Command{
 			}
 		}(file)
 
+		if fileType == "" {
+			fileType = configData.Type
+		}
+
 		err = nacosClient.Edit(nacos.ConfigEditOperation{
 			NacosOperation: &nacos.NacosOperation{
 				Namespace: namespace,
@@ -120,6 +125,7 @@ var editConfig = &cobra.Command{
 			},
 			DataId:  dataId,
 			Content: string(edited),
+			Type:    fileType,
 		})
 
 		if err != nil {
@@ -132,10 +138,12 @@ var editConfig = &cobra.Command{
 }
 
 func init() {
+
+	editConfig.Flags().StringVarP(&fileType, "type", "t", "", "file type")
+	getConfig.Flags().BoolVarP(&getAllConfig, "all", "A", false, "If present, list the requested object(s) across all config name")
+
 	editCmd.AddCommand(editConfig)
 	getCmd.AddCommand(getConfig)
-
-	getConfig.Flags().BoolVarP(&getAllConfig, "all", "A", false, "If present, list the requested object(s) across all config name")
 }
 
 func printTable(items []nacos.NacosPageItem) {
@@ -145,7 +153,10 @@ func printTable(items []nacos.NacosPageItem) {
 	table.AddRow("ID", "GROUP", "NAMESPACE")
 
 	for _, item := range items {
-		table.AddRow(item.DataId, item.Group, namespace)
+		if item.Tenant == "" {
+			item.Tenant = "public"
+		}
+		table.AddRow(item.DataId, item.Group, item.Tenant)
 	}
 
 	fmt.Println(table)
