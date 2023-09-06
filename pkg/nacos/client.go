@@ -70,7 +70,6 @@ func (c *Client) AllConfig(operation ConfigGetOperation) ([]NacosPageItem, error
 
 	requestUrl := fmt.Sprintf(configUrl+"?dataId=&group=%s&tenant=%s&pageNo=1&pageSize=999&search=accurate", operation.Group, operation.Namespace)
 
-	fmt.Printf("requestUrl: %v\n", requestUrl)
 	resp, err := http.Get(requestUrl)
 
 	if err != nil {
