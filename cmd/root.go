@@ -34,7 +34,7 @@ func Execute() {
 }
 
 func init() {
-	rootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "PUBLIC", "nacos namespace")
+	rootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "", "nacos namespace")
 	rootCmd.PersistentFlags().StringVarP(&group, "group", "g", "DEFAULT_GROUP", "nacos group")
 	rootCmd.PersistentFlags().StringVarP(&dataId, "dataId", "d", "", "nacos dataId")
 
