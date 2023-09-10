@@ -104,8 +104,6 @@ func (c *Client) Edit(operation ConfigEditOperation) error {
 		return err
 	}
 
-	fmt.Println("type: ", operation.Type)
-
 	resp, err := http.PostForm(configUrl, url.Values{
 		"dataId":  []string{operation.DataId},
 		"group":   []string{operation.Group},

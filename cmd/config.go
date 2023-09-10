@@ -5,6 +5,7 @@ package cmd
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"github/szpinc/nacosctl/pkg/editor"
 	"github/szpinc/nacosctl/pkg/nacos"
@@ -25,44 +26,43 @@ var getConfig = &cobra.Command{
 	Use:   "config",
 	Short: "nacos config",
 	Long:  ``,
-	Run: func(cmd *cobra.Command, args []string) {
+	RunE: func(cmd *cobra.Command, args []string) error {
 
-		if dataId == "" && len(args) > 0 {
-			dataId = args[0]
+		if getAllConfig {
+			dataIds, err := nacosClient.AllConfig(nacos.ConfigGetOperation{
+				NacosOperation: &nacos.NacosOperation{
+					Namespace: namespace,
+				},
+			})
+
+			if err != nil {
+				return err
+			}
+
+			printTable(dataIds)
+			return nil
 		}
 
-		cfg := nacos.ConfigGetOperation{
+		if len(args) == 0 {
+			return errors.New("data id required")
+		}
+
+		dataId := args[0]
+
+		configData, err := nacosClient.Get(nacos.ConfigGetOperation{
 			NacosOperation: &nacos.NacosOperation{
 				Namespace: namespace,
 				Group:     group,
 			},
 			DataId: dataId,
-		}
-
-		if dataId == "" {
-			if getAllConfig {
-				cfg.Group = ""
-			}
-			dataIds, err := nacosClient.AllConfig(cfg)
-
-			if err != nil {
-				fmt.Println(err.Error())
-				return
-			}
-
-			printTable(dataIds)
-
-			return
-		}
-
-		configData, err := nacosClient.Get(cfg)
+		})
 
 		if err != nil {
-			fmt.Println(err.Error())
-			return
+			return err
 		}
 
 		fmt.Println(configData.Content)
+		return nil
 	},
 }
 
@@ -72,9 +72,7 @@ var editConfig = &cobra.Command{
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 
-		if dataId == "" {
-			dataId = args[0]
-		}
+		var dataId = args[0]
 
 		configData, err := nacosClient.Get(nacos.ConfigGetOperation{
 			NacosOperation: &nacos.NacosOperation{
@@ -140,6 +138,7 @@ var editConfig = &cobra.Command{
 func init() {
 
 	editConfig.Flags().StringVarP(&fileType, "type", "t", "", "file type")
+
 	getConfig.Flags().BoolVarP(&getAllConfig, "all", "A", false, "If present, list the requested object(s) across all config name")
 
 	editCmd.AddCommand(editConfig)
