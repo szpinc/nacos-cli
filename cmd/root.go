@@ -9,7 +9,6 @@ import (
 
 var namespace string
 var group string
-var dataId string
 
 var nacosClient *nacos.Client
 
@@ -36,7 +35,6 @@ func Execute() {
 func init() {
 	rootCmd.PersistentFlags().StringVarP(&namespace, "namespace", "n", "", "nacos namespace")
 	rootCmd.PersistentFlags().StringVarP(&group, "group", "g", "DEFAULT_GROUP", "nacos group")
-	rootCmd.PersistentFlags().StringVarP(&dataId, "dataId", "d", "", "nacos dataId")
 
 	_ = rootCmd.MarkFlagRequired("namespace")
 	_ = rootCmd.MarkFlagRequired("group")

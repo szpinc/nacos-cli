@@ -26,6 +26,14 @@ type ConfigGetOperation struct {
 	DataId string // data-id
 }
 
+// ConfigApplyOperation 配置更新操作
+type ConfigApplyOperation struct {
+	*NacosOperation
+	File   string // 配置文件
+	DataId string // data-id
+	Type   string // 文件类型
+}
+
 var DefaultNacosOperation = NacosOperation{
 	Namespace: "public",
 	Group:     "DEFAULT_GROUP",
