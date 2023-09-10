@@ -41,8 +41,8 @@ nacos-cli get config common.yaml -n PUBLIC -g DEFAULT_GROUP
 nacos-cli edit config common.yaml -n PUBLIC -g DEFAULT_GROUP
 ```
 
-**编辑配置-指定文件**
+** 从文件更新配置 **
 
 ``` bash
-nacos-cli edit config common.yaml -f ./edit_common.yaml -n PUBLIC -g DEFAULT_GROUP
+nacos-cli apply -f common.yaml -n public -g DEFAULT_GROUP --id common.yaml
 ```
