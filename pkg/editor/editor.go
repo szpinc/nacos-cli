@@ -1,33 +1,14 @@
-/*
-Copyright 2015 The Kubernetes Authors.
-
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
-
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-*/
-
 package editor
 
 import (
 	"fmt"
+	"github/szpinc/nacosctl/pkg/term"
 	"io"
 	"os"
 	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
-
-	"k8s.io/klog/v2"
-
-	"k8s.io/kubectl/pkg/util/term"
 )
 
 const (
@@ -123,7 +104,7 @@ func (e Editor) Launch(path string) error {
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
 	cmd.Stdin = os.Stdin
-	klog.V(5).Infof("Opening file with editor %v", args)
+	fmt.Printf("Opening file with editor %v\n", args)
 	if err := (term.TTY{In: os.Stdin, TryDev: true}).Safe(cmd.Run); err != nil {
 		if err, ok := err.(*exec.Error); ok {
 			if err.Err == exec.ErrNotFound {
