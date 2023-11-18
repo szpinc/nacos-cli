@@ -34,6 +34,13 @@ type ConfigApplyOperation struct {
 	Type   string // 文件类型
 }
 
+// ConfigDeleteOperation 配置删除操作
+type ConfigDeleteOperation struct {
+	*NacosOperation
+	DataId string // data-id
+	Type   string // 文件类型
+}
+
 var DefaultNacosOperation = NacosOperation{
 	Namespace: "public",
 	Group:     "DEFAULT_GROUP",

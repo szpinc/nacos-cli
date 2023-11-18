@@ -45,3 +45,12 @@ func (c *Client) ApplyConfig(operation ConfigApplyOperation) error {
 	fmt.Println("OK!")
 	return nil
 }
+
+func (c *Client) DeleteConfig(operation ConfigDeleteOperation) error {
+	baseUrl, err := getUrl(c.Config)
+
+	if err != nil {
+		return err
+	}
+
+}
