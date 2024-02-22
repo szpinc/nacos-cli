@@ -135,6 +135,22 @@ var editConfig = &cobra.Command{
 	},
 }
 
+var deleteConfig = &cobra.Command{
+	Use:   "config",
+	Short: "nacos config",
+	Long:  ``,
+	RunE: func(cmd *cobra.Command, args []string) error {
+		nacosClient.DeleteConfig(nacos.ConfigDeleteOperation{
+			NacosOperation: &nacos.NacosOperation{
+				Namespace: namespace,
+				Group:     group,
+			},
+			DataId: dataId,
+		})
+		return nil
+	},
+}
+
 func init() {
 
 	editConfig.Flags().StringVarP(&fileType, "type", "t", "", "file type")
@@ -143,6 +159,7 @@ func init() {
 
 	editCmd.AddCommand(editConfig)
 	getCmd.AddCommand(getConfig)
+	deleteCmd.AddCommand(deleteConfig)
 }
 
 func printTable(items []nacos.NacosPageItem) {
