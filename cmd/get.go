@@ -12,14 +12,13 @@ var getCmd = &cobra.Command{
 	Use:   "get",
 	Short: "Get a resource from nacos server",
 	Long: `
-Get a resource from nacos server
-
-e.g:
-	nacos-ctl edit config common.yml
-`,
+		Get a resource from nacos server
+	`,
+	Example: "nacosctl edit config common.yml",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
+	// ValidArgs: []string{"config"},
 }
 
 func init() {

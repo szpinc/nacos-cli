@@ -5,6 +5,8 @@ import (
 	"github/szpinc/nacosctl/pkg/editor"
 	"os"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGet(t *testing.T) {
@@ -65,4 +67,23 @@ func TestEdit(t *testing.T) {
 		panic(err)
 	}
 
+}
+
+func TestDeleteConfig(t *testing.T) {
+	client := Client{
+		Config: &NacosConfig{
+			Addr:       "http://172.16.8.123:8848/nacos",
+			ApiVersion: "v1",
+		},
+	}
+
+	err := client.DeleteConfig(ConfigDeleteOperation{
+		NacosOperation: &NacosOperation{
+			Group:     "DEFAULT_GROUP",
+			Namespace: "demo",
+		},
+		DataId: "common.yaml",
+	})
+
+	assert.Nil(t, err)
 }

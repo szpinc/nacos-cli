@@ -23,6 +23,7 @@ var rootCmd = &cobra.Command{
 	// PersistentPreRunE: func(cmd *cobra.Command, args []string) error {
 
 	// },
+	ValidArgs: []string{"get", "delete", "edit"},
 }
 
 func Execute() {

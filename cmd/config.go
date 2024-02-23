@@ -64,6 +64,25 @@ var getConfig = &cobra.Command{
 		fmt.Println(configData.Content)
 		return nil
 	},
+	ValidArgsFunction: func(cmd *cobra.Command, args []string, toComplete string) ([]string, cobra.ShellCompDirective) {
+		dataIds, err := nacosClient.AllConfig(nacos.ConfigGetOperation{
+			NacosOperation: &nacos.NacosOperation{
+				Namespace: namespace,
+			},
+		})
+		for _, dataId := range dataIds {
+			println(dataId.DataId)
+		}
+		if err != nil {
+			return nil, cobra.ShellCompDirectiveNoFileComp
+		}
+		names := []string{}
+
+		for _, id := range dataIds {
+			names = append(names, id.DataId)
+		}
+		return names, cobra.ShellCompDirectiveNoFileComp
+	},
 }
 
 var editConfig = &cobra.Command{
@@ -140,14 +159,18 @@ var deleteConfig = &cobra.Command{
 	Short: "nacos config",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		nacosClient.DeleteConfig(nacos.ConfigDeleteOperation{
+
+		if len(args) == 0 {
+			return errors.New("data id required")
+		}
+
+		return nacosClient.DeleteConfig(nacos.ConfigDeleteOperation{
 			NacosOperation: &nacos.NacosOperation{
 				Namespace: namespace,
 				Group:     group,
 			},
-			DataId: dataId,
+			DataId: args[0],
 		})
-		return nil
 	},
 }
 

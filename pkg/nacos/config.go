@@ -56,10 +56,20 @@ func (c *Client) DeleteConfig(operation ConfigDeleteOperation) error {
 		return err
 	}
 
-	resp, err := http.PostForm(deleteUrl, url.Values{
+	req, err := http.NewRequest("DELETE", deleteUrl, nil)
+
+	if err != nil {
+		return nil
+	}
+
+	// 请求参数
+	req.URL.RawQuery = url.Values{
 		"dataId": []string{operation.DataId},
 		"group":  []string{operation.Group},
-	})
+		"tenant": []string{operation.Namespace},
+	}.Encode()
+
+	resp, err := http.DefaultClient.Do(req)
 
 	if err != nil {
 		return err

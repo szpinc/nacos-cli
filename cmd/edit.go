@@ -9,14 +9,13 @@ import (
 
 // editCmd represents the edit command
 var editCmd = &cobra.Command{
-	Use:   "edit",
-	Short: "Edit a resource on the nacos server",
-	Long: `
-		nacos-ctl edit config common.yml
-	`,
+	Use:     "edit",
+	Short:   "Edit a resource on the nacos server",
+	Example: "nacosctl edit config common.yml",
 	Run: func(cmd *cobra.Command, args []string) {
 		cmd.Help()
 	},
+	ValidArgs: []string{"config"},
 }
 
 func init() {

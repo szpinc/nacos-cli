@@ -38,7 +38,6 @@ type ConfigApplyOperation struct {
 type ConfigDeleteOperation struct {
 	*NacosOperation
 	DataId string // data-id
-	Type   string // 文件类型
 }
 
 var DefaultNacosOperation = NacosOperation{
